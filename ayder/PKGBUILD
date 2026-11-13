@@ -7,11 +7,9 @@ arch=('x86_64')
 url="https://github.com/AyOS-Linux/ayder"
 license=('GPL-3.0-or-later')
 
-# Пакет будет заменять стандартный calamares
 provides=('calamares')
 conflicts=('calamares')
 
-# Зависимости для работы (основано на требованиях Calamares и твоем README)
 depends=(
     'kcoreaddons'
     'kpmcore'
@@ -26,7 +24,6 @@ depends=(
     'polkit-qt6'
 )
 
-# Зависимости для сборки
 makedepends=(
     'cmake'
     'extra-cmake-modules'
@@ -35,30 +32,33 @@ makedepends=(
     'git'
 )
 
-# Исходники: твой форк Calamares и локальная папка с конфигами
-source=(
-    "ayder::git+https://github.com/AyOS-Linux/ayder.git#branch=main"
-    "calamares/"
-)
-sha256sums=('SKIP' 'SKIP')
+# Тянем код напрямую из твоего репозитория с исходниками
+source=("git+https://github.com/AyOS-Linux/ayder.git")
+sha256sums=('SKIP')
 
 build() {
-    # Собираем Calamares из исходников
-    cmake -B build -S "$srcdir/ayder" \
+    # Заходим в папку, куда makepkg склонировал исходники
+    cd "$srcdir/ayder"
+    
+    # Конфигурируем сборку
+    cmake -B build -S . \
         -G Ninja \
         -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_INSTALL_PREFIX=/usr \
         -DWITH_QT6=ON \
         -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
+        
+    # Собираем
     cmake --build build
 }
 
 package() {
-    # Устанавливаем собранный Calamares
+    cd "$srcdir/ayder"
+    # Устанавливаем
     DESTDIR="$pkgdir" cmake --install build
-
-    # Копируем твои кастомные конфиги и брендинг
-    # Из папки calamares/ в системную директорию /etc/calamares/
-    install -d "$pkgdir/etc/calamares"
-    cp -r "$srcdir/calamares/"* "$pkgdir/etc/calamares/"
+    
+    # Если твои конфиги лежат в репозитории с исходниками (в папке calamares),
+    # но cmake их не подхватывает, раскомментируй и поправь путь ниже:
+    # install -d "$pkgdir/etc/calamares"
+    # cp -r "$srcdir/ayder/calamares/"* "$pkgdir/etc/calamares/"
 }
