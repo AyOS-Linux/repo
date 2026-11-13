@@ -1,31 +1,64 @@
-# Maintainer: AyOS Linux <vidskix@gmail.com>
+# Maintainer: AyOS Linux <твой_email@example.com>
 pkgname=ayder
-pkgver=0.0.1
+pkgver=3.4.3
 pkgrel=1
-pkgdesc="Ayder — AyOS custom Calamares installer (Work In Progress / В разработке)"
-arch=('any')
-url="https://github.com/AyOS-Linux"
-license=('GPL-3.0-or-later')   # как у Calamares; поменяй, если решишь иначе
-# depends=('calamares')        # раскомментировать, когда пакет начнёт зависеть от готового Calamares
-# provides=('calamares')       # раскомментировать, когда Ayder станет полноценной заменой
-# conflicts=('calamares')      # раскомментировать вместе с provides
-install="$pkgname.install"
+pkgdesc="Ayder — AyOS custom Calamares installer (built from source)"
+arch=('x86_64')
+url="https://github.com/AyOS-Linux/ayder"
+license=('GPL-3.0-or-later')
+
+# Пакет будет заменять стандартный calamares
+provides=('calamares')
+conflicts=('calamares')
+
+# Зависимости для работы (основано на требованиях Calamares и твоем README)
+depends=(
+    'kcoreaddons'
+    'kpmcore'
+    'libpwquality'
+    'qt6-declarative'
+    'qt6-svg'
+    'yaml-cpp'
+    'python'
+    'python-yaml'
+    'python-jsonschema'
+    'boost-libs'
+    'polkit-qt6'
+)
+
+# Зависимости для сборки
+makedepends=(
+    'cmake'
+    'extra-cmake-modules'
+    'ninja'
+    'qt6-tools'
+    'git'
+)
+
+# Исходники: твой форк Calamares и локальная папка с конфигами
+source=(
+    "ayder::git+https://github.com/AyOS-Linux/ayder.git#branch=main"
+    "calamares/"
+)
+sha256sums=('SKIP' 'SKIP')
+
+build() {
+    # Собираем Calamares из исходников
+    cmake -B build -S "$srcdir/ayder" \
+        -G Ninja \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_INSTALL_PREFIX=/usr \
+        -DWITH_QT6=ON \
+        -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
+    cmake --build build
+}
 
 package() {
-    # Заглушка-README, чтобы пакет не был пустым
-    mkdir -p "$pkgdir/usr/share/ayder"
+    # Устанавливаем собранный Calamares
+    DESTDIR="$pkgdir" cmake --install build
 
-    cat > "$pkgdir/usr/share/ayder/README.md" <<EOF
-# Ayder — Custom Calamares for AyOS / Кастомный Calamares для AyOS
-
-**Work In Progress / В разработке**
-
-Ayder is a custom build of Calamares with its own theme, animations
-and color palette, designed for AyOS Linux.
-No installer functionality is available in this package yet.
-
-Ayder — это кастомная сборка Calamares с собственной темой,
-анимациями и цветовой палитрой, созданная для AyOS Linux.
-Функциональность установщика в этом пакете пока недоступна.
-EOF
+    # Копируем твои кастомные конфиги и брендинг
+    # Из папки calamares/ в системную директорию /etc/calamares/
+    install -d "$pkgdir/etc/calamares"
+    cp -r "$srcdir/calamares/"* "$pkgdir/etc/calamares/"
 }

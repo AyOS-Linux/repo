@@ -1,10 +1,31 @@
 pkgbase = ayder
-	pkgdesc = Ayder — AyOS custom Calamares installer (Work In Progress / В разработке)
-	pkgver = 0.0.1
+	pkgdesc = Ayder — AyOS custom Calamares installer (built from source)
+	pkgver = 3.4.3
 	pkgrel = 1
-	url = https://github.com/AyOS-Linux
-	install = ayder.install
-	arch = any
+	url = https://github.com/AyOS-Linux/ayder
+	arch = x86_64
 	license = GPL-3.0-or-later
+	makedepends = cmake
+	makedepends = extra-cmake-modules
+	makedepends = ninja
+	makedepends = qt6-tools
+	makedepends = git
+	depends = kcoreaddons
+	depends = kpmcore
+	depends = libpwquality
+	depends = qt6-declarative
+	depends = qt6-svg
+	depends = yaml-cpp
+	depends = python
+	depends = python-yaml
+	depends = python-jsonschema
+	depends = boost-libs
+	depends = polkit-qt6
+	provides = calamares
+	conflicts = calamares
+	source = ayder::git+https://github.com/AyOS-Linux/ayder.git#branch=main
+	source = calamares/
+	sha256sums = SKIP
+	sha256sums = SKIP
 
 pkgname = ayder
