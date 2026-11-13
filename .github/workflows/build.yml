@@ -19,10 +19,25 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Setup ccache
+        uses: hendrikmuhs/ccache-action@v1.2
+        with:
+          key: ${{ github.job }}-${{ github.ref }}
+          restore-keys: |
+            ${{ github.job }}-
+
+      - name: Setup pacman cache
+        uses: actions/cache@v3
+        with:
+          path: /var/cache/pacman/pkg
+          key: ${{ runner.os }}-pacman-${{ hashFiles('**/PKGBUILD') }}
+          restore-keys: |
+            ${{ runner.os }}-pacman-
+
       - name: Update system and install tools
         run: pacman -Syu --noconfirm base-devel git ccache
 
-      - name: Create build user (makepkg не любит root)
+      - name: Create build user
         run: |
           useradd -m builder
           echo "builder ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
@@ -50,7 +65,6 @@ jobs:
           cd public/x86_64
           if ls *.pkg.tar.zst 1> /dev/null 2>&1; then
             repo-add ayos.db.tar.zst *.pkg.tar.zst
-            # Удаляем жесткую ссылку, чтобы cp не ругался
             rm -f ayos.db
             cp ayos.db.tar.zst ayos.db
           fi
