@@ -25,6 +25,7 @@ jobs:
           key: ${{ github.job }}-${{ github.ref }}
           restore-keys: |
             ${{ github.job }}-
+          install: no
 
       - name: Setup pacman cache
         uses: actions/cache@v3
