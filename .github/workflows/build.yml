@@ -50,6 +50,8 @@ jobs:
           cd public/x86_64
           if ls *.pkg.tar.zst 1> /dev/null 2>&1; then
             repo-add ayos.db.tar.zst *.pkg.tar.zst
+            # Удаляем жесткую ссылку, чтобы cp не ругался
+            rm -f ayos.db
             cp ayos.db.tar.zst ayos.db
           fi
 
