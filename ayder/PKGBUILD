@@ -1,0 +1,31 @@
+# Maintainer: AyOS Linux <vidskix@gmail.com>
+pkgname=ayder
+pkgver=0.0.1
+pkgrel=1
+pkgdesc="Ayder — AyOS custom Calamares installer (Work In Progress / В разработке)"
+arch=('any')
+url="https://github.com/AyOS-Linux"
+license=('GPL-3.0-or-later')   # как у Calamares; поменяй, если решишь иначе
+# depends=('calamares')        # раскомментировать, когда пакет начнёт зависеть от готового Calamares
+# provides=('calamares')       # раскомментировать, когда Ayder станет полноценной заменой
+# conflicts=('calamares')      # раскомментировать вместе с provides
+install="$pkgname.install"
+
+package() {
+    # Заглушка-README, чтобы пакет не был пустым
+    mkdir -p "$pkgdir/usr/share/ayder"
+
+    cat > "$pkgdir/usr/share/ayder/README.md" <<EOF
+# Ayder — Custom Calamares for AyOS / Кастомный Calamares для AyOS
+
+**Work In Progress / В разработке**
+
+Ayder is a custom build of Calamares with its own theme, animations
+and color palette, designed for AyOS Linux.
+No installer functionality is available in this package yet.
+
+Ayder — это кастомная сборка Calamares с собственной темой,
+анимациями и цветовой палитрой, созданная для AyOS Linux.
+Функциональность установщика в этом пакете пока недоступна.
+EOF
+}

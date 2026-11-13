@@ -1,0 +1,10 @@
+pkgbase = ayder
+	pkgdesc = Ayder — AyOS custom Calamares installer (Work In Progress / В разработке)
+	pkgver = 0.0.1
+	pkgrel = 1
+	url = https://github.com/AyOS-Linux
+	install = ayder.install
+	arch = any
+	license = GPL-3.0-or-later
+
+pkgname = ayder
