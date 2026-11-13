@@ -33,7 +33,7 @@ jobs:
               echo "::group::Building ${pkgdir}"
               cd "$pkgdir"
               chown -R builder:builder .
-              su builder -c "makepkg -s --noconfirm --nocheck"
+              su builder -c "makepkg -sf --noconfirm --nocheck"
               cd ..
               echo "::endgroup::"
             fi
