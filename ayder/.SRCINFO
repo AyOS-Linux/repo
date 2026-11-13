@@ -23,7 +23,9 @@ pkgbase = ayder
 	depends = polkit-qt6
 	provides = calamares
 	conflicts = calamares
-	source = git+https://github.com/AyOS-Linux/ayder.git
+	source = calamares::git+https://github.com/calamares/calamares.git
+	source = ayder-configs::git+https://github.com/AyOS-Linux/ayder.git
+	sha256sums = SKIP
 	sha256sums = SKIP
 
 pkgname = ayder

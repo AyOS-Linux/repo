@@ -32,15 +32,18 @@ makedepends=(
     'git'
 )
 
-# Тянем код напрямую из твоего репозитория с исходниками
-source=("git+https://github.com/AyOS-Linux/ayder.git")
-sha256sums=('SKIP')
+
+source=(
+    "calamares::git+https://github.com/calamares/calamares.git"
+    "ayder-configs::git+https://github.com/AyOS-Linux/ayder.git"
+)
+sha256sums=('SKIP' 'SKIP')
 
 build() {
-    # Заходим в папку, куда makepkg склонировал исходники
-    cd "$srcdir/ayder"
+    # Заходим в папку с исходниками Calamares
+    cd "$srcdir/calamares"
     
-    # Конфигурируем сборку
+    # Конфигурируем и собираем
     cmake -B build -S . \
         -G Ninja \
         -DCMAKE_BUILD_TYPE=Release \
@@ -48,17 +51,16 @@ build() {
         -DWITH_QT6=ON \
         -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
         
-    # Собираем
     cmake --build build
 }
 
 package() {
-    cd "$srcdir/ayder"
-    # Устанавливаем
+    # Устанавливаем собранный Calamares
+    cd "$srcdir/calamares"
     DESTDIR="$pkgdir" cmake --install build
-    
-    # Если твои конфиги лежат в репозитории с исходниками (в папке calamares),
-    # но cmake их не подхватывает, раскомментируй и поправь путь ниже:
-    # install -d "$pkgdir/etc/calamares"
-    # cp -r "$srcdir/ayder/calamares/"* "$pkgdir/etc/calamares/"
+
+    # Копируем твои конфиги и брендинг из репозитория ayder
+    # Предполагается, что папка с конфигами внутри репозитория называется "calamares"
+    install -d "$pkgdir/etc/calamares"
+    cp -r "$srcdir/ayder-configs/calamares/"* "$pkgdir/etc/calamares/"
 }
