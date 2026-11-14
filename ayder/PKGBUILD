@@ -1,7 +1,7 @@
 # Maintainer: AyOS Linux <твой_email@example.com>
 pkgname=ayder
 pkgver=3.4.3
-pkgrel=1
+pkgrel=2
 pkgdesc="Ayder — AyOS custom Calamares installer (built from source)"
 arch=('x86_64')
 url="https://github.com/AyOS-Linux/ayder"
